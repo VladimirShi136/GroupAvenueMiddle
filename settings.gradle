@@ -1,2 +1,3 @@
 rootProject.name = 'GroupAvenueMiddle'
+include 'hw-05-Calculator'
 
