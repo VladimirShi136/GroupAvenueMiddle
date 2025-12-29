@@ -1,0 +1,181 @@
+@startuml ATM_Complete_Class_Diagram
+
+' === Цвета и настройки ===
+skinparam class {
+    BackgroundColor<<Main>> LightBlue
+    BackgroundColor<<ATM>> LightGreen
+    BackgroundColor<<Model>> LightYellow
+    BackgroundColor<<Exception>> #FFE6E6
+    BorderColor Black
+    ArrowColor #666666
+}
+
+' === Основной пакет ===
+package "com.group.avenue.middle.atm.project" {
+  class Main {
+    - scanner: Scanner
+    - atm: ATM
+    - currentUser: User
+    - running: boolean
+    + main(String[]): void
+    + initializeATMWithMoney(): void
+    + showMainMenu(): void
+    + checkBalance(): void
+    + depositMoney(): void
+    + withdrawMoney(): void
+    + showATMBalance(): void
+    + showUserInfo(): void
+    + resetDailyLimit(): void
+    + exit(): void
+    + readIntInput(String): int
+  }
+
+  class ATM {
+    - id: String
+    - cassettes: Map<Banknote, Cassette>
+    - maxWithdrawalAmount: int
+    - minBanknoteValue: int
+    + ATM(String, int)
+    + deposit(Map<Banknote, Integer>): Map<Banknote, Integer>
+    + withdraw(int): WithdrawalResult
+    + getBalance(): int
+    + getAvailableBanknotes(): Map<Banknote, Integer>
+    + getStatus(): String
+    + getMaxWithdrawalAmount(): int
+    + getMinBanknoteValue(): int
+  }
+
+  class ATMUtils {
+    + formatAmount(int): String
+    + formatBanknotes(Map<Banknote, Integer>): String
+    + formatBanknotesCompact(Map<Banknote, Integer>): String
+    + getAmountErrorMessage(int, int): String
+  }
+}
+
+' === Пакет модели данных ===
+package "com.group.avenue.middle.atm.project.model" {
+  class Banknote <<enumeration>> {
+    RUB_50(50)
+    RUB_100(100)
+    RUB_200(200)
+    RUB_500(500)
+    RUB_1000(1000)
+    RUB_2000(2000)
+    RUB_5000(5000)
+    - valueInRubles: int
+    + getValue(): int
+  }
+
+  class Cassette {
+    - banknote: Banknote
+    - capacity: int
+    - count: int
+    + Cassette(Banknote, int)
+    + Cassette(Banknote, int, int)
+    + deposit(int): int
+    + withdraw(int): void
+    + getBanknote(): Banknote
+    + getCapacity(): int
+    + getCount(): int
+    + getCurrentAmount(): int
+    + isEmpty(): boolean
+  }
+
+  class User {
+    - name: String
+    - cardNumber: String
+    - balance: int
+    - dailyLimit: int
+    - withdrawnToday: int
+    + User(String, String, int, int)
+    + canWithdraw(int): boolean
+    + withdraw(int): void
+    + deposit(int): void
+    + resetDailyLimit(): void
+    + getBalance(): int
+    + getDailyLimit(): int
+    + getWithdrawnToday(): int
+    + getAvailableToday(): int
+  }
+
+  class WithdrawalResult {
+    - success: boolean
+    - banknotes: Map<Banknote, Integer>
+    - errorMessage: String
+    - requestedAmount: int
+    - actualAmount: int
+    + WithdrawalResult(int, Map<Banknote, Integer>)
+    + WithdrawalResult(int, String)
+    + isSuccess(): boolean
+    + getBanknotes(): Map<Banknote, Integer>
+    + getErrorMessage(): String
+    + getRequestedAmount(): int
+    + getActualAmount(): int
+    + formatBanknotes(): String
+  }
+}
+
+' === Пакет исключений ===
+package "com.group.avenue.middle.atm.project.exception" {
+  abstract class ATMException {
+    - message: String
+    + ATMException(String)
+    + ATMException(String, Throwable)
+  }
+
+  class CassetteException
+  class InsufficientFundsException
+  class InvalidAmountException
+  class UnsupportedBanknoteException
+}
+
+' === Связи между классами ===
+Main "1" --> "1" ATM : использует
+Main "1" --> "1" User : работает с
+Main "1" --> "1" ATMUtils : использует
+Main "1" --> "1" WithdrawalResult : получает
+
+ATM "1" *-- "1..*" Cassette : содержит
+ATM "1" --> "1" Banknote : использует
+ATM "1" --> "1" WithdrawalResult : возвращает
+
+Cassette "1" --> "1" Banknote : хранит номинал
+
+ATMUtils "1" --> "1" Banknote : форматирует данные
+
+WithdrawalResult "1" --> "*" Banknote : содержит информацию
+
+' === Наследование исключений ===
+ATMException <|-- CassetteException
+ATMException <|-- InsufficientFundsException
+ATMException <|-- InvalidAmountException
+ATMException <|-- UnsupportedBanknoteException
+
+' === Отношения исключений с классами ===
+Cassette ..> CassetteException : может выбросить
+Cassette ..> InvalidAmountException : может выбросить
+
+ATM ..> InvalidAmountException : может выбросить
+ATM ..> InsufficientFundsException : может выбросить
+ATM ..> UnsupportedBanknoteException : может выбросить
+ATM ..> CassetteException : обрабатывает
+
+User ..> InvalidAmountException : может выбросить
+User ..> InsufficientFundsException : может выбросить
+
+' === Нотация для типов данных ===
+note right of WithdrawalResult
+  Используется для возврата
+  результата операции выдачи
+  как в успешном случае,
+  так и при ошибках
+end note
+
+note right of ATMException
+  Базовый класс для всех
+  пользовательских исключений
+  в системе АТМ
+end note
+
+@enduml
