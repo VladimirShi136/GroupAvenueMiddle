@@ -1,3 +1,5 @@
 rootProject.name = 'GroupAvenueMiddle'
 include 'hw-05-Calculator'
-
+include 'hw-06-docker'
+include 'hw-06-Docker'
+include 'hw-07-ATM'
