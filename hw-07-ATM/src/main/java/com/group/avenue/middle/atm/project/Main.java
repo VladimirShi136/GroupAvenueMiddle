@@ -11,6 +11,12 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/**
+ * @author vladimir_shi
+ * @since 29.12.2025
+ *
+ * Класс для запуска программы
+ */
 public class Main {
     private static final Scanner scanner;
     private static ATM atm;
@@ -87,7 +93,6 @@ public class Main {
             e.printStackTrace();
         } finally {
             // Этот блок выполнится ВСЕГДА, даже при исключениях
-
             // Гарантированно закрываем сканер
             if (scanner != null) {
                 try {
@@ -148,12 +153,13 @@ public class Main {
         Map<Banknote, Integer> banknotesToDeposit = new HashMap<>();
 
         for (Banknote banknote : Banknote.values()) {
-            System.out.print("Сколько купюр по " + banknote.getValue() + " руб. вносите? (0 для пропуска): ");
-            int count = scanner.nextInt();
-            scanner.nextLine(); // очистка буфера
+            // Используем безопасный ввод
+            int count = readIntInput("Сколько купюр по " + banknote.getValue() + " руб. вносите? (0 для пропуска): ");
 
             if (count > 0) {
                 banknotesToDeposit.put(banknote, count);
+            } else if (count < 0) {
+                System.out.println("Количество не может быть отрицательным. Пропускаем эту купюру.");
             }
         }
 
@@ -323,23 +329,34 @@ public class Main {
                     // Если ввод закрыт, выходим из программы
                     System.out.println("\nВвод закрыт. Завершение программы...");
                     running = false;
-                    return 0; // или бросить специальное исключение
+                    return 0;
                 }
 
+                // Пробуем прочитать целое число
                 int value = scanner.nextInt();
                 scanner.nextLine(); // очистка буфера
+
+                 // Проверяем на отрицательные числа
+                 if (value < 0) {
+                     System.out.println("Число не может быть отрицательным. Попробуйте снова.");
+                     continue;
+                 }
+
                 return value;
 
             } catch (InputMismatchException e) {
-                System.out.println("Пожалуйста, введите целое число.");
-                scanner.nextLine(); // очистка некорректного ввода
+                // Пользователь ввел не число
+                System.out.println("Ошибка: пожалуйста, введите целое число!");
+                scanner.nextLine(); // ОЧИСТКА НЕКОРРЕКТНОГО ВВОДА - ВАЖНО!
+
             } catch (NoSuchElementException e) {
-                // Если ввод был закрыт (нажали Stop)
+                // Сканер не может найти элемент (ввод закрыт)
                 System.out.println("\nПрограмма завершена пользователем.");
                 running = false;
                 return 0;
+
             } catch (IllegalStateException e) {
-                // Если scanner был закрыт
+                // Сканер был закрыт
                 System.out.println("\nСканер закрыт. Завершение...");
                 running = false;
                 return 0;

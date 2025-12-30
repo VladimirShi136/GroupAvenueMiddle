@@ -1,9 +1,14 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group = 'com.group.avenue.middle.project'
 version = '1.0-SNAPSHOT'
+
+application {
+    mainClass = 'com.group.avenue.middle.atm.project.Main'
+}
 
 repositories {
     mavenCentral()
@@ -17,6 +22,21 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+compileJava {
+    options.release = 23
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.group.avenue.middle.atm.project.Main'
+    }
+    // Собираем fat JAR (если используешь старый Gradle)
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 tasks.withType(JavaExec).configureEach {

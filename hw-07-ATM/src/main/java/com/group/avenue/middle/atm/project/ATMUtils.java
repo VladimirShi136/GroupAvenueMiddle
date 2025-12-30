@@ -7,10 +7,10 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
+ * Утилиты для форматирования вывода
+ *
  * @author vladimir_shi
  * @since 29.12.2025
- *
- * Утилиты для форматирования вывода
  */
 public class ATMUtils {
     private static final NumberFormat RUB_FORMAT;

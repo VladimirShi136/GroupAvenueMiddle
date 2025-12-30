@@ -1,11 +1,11 @@
 package com.group.avenue.middle.atm.project.model;
 
 /**
- * @author vladimir_shi
- * @since 29.12.2025
- *
  * Номиналы банкнот, поддерживаемых банкоматом.
  * Значения хранятся в рублях.
+ *
+ * @author vladimir_shi
+ * @since 29.12.2025
  */
 public enum Banknote {
     RUB_50(50),

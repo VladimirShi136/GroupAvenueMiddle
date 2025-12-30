@@ -4,10 +4,10 @@ import com.group.avenue.middle.atm.project.exception.CassetteException;
 import com.group.avenue.middle.atm.project.exception.InvalidAmountException;
 
 /**
+ * Ячейка банкомата для хранения банкнот одного номинала.
+ *
  * @author vladimir_shi
  * @since 29.12.2025
- *
- * Ячейка банкомата для хранения банкнот одного номинала.
  */
 public class Cassette {
     private final Banknote banknote; // номинал банкнот в ячейке

@@ -11,14 +11,14 @@ import com.group.avenue.middle.atm.project.model.WithdrawalResult;
 import java.util.*;
 
 /**
+ * Основной класс банкомата
+ *
  * @author vladimir_shi
  * @since 29.12.2025
- *
- * Основной класс банкомата
  */
 public class ATM {
-    private final String id;
-    private final Map<Banknote, Cassette> cassettes;
+    private final String id; // уникальный идентификатор
+    private final Map<Banknote, Cassette> cassettes; // мапа: номинал -> ячейка
     private final int maxWithdrawalAmount; // максимум за одну операцию
     private final int minBanknoteValue; // минимальный номинал
 
@@ -72,14 +72,12 @@ public class ATM {
             int quantity = entry.getValue();
 
             if (quantity <= 0) {
-                // Используем InvalidAmountException
                 throw new InvalidAmountException(
                         "Количество банкнот " + banknote.getValue() + " руб. должно быть положительным");
             }
 
             Cassette cassette = cassettes.get(banknote);
             if (cassette == null) {
-                // Используем UnsupportedBanknoteException
                 throw new UnsupportedBanknoteException(
                         "Банкомат не поддерживает номинал: " + banknote.getValue() + " руб.");
             }
@@ -89,7 +87,6 @@ public class ATM {
                 accepted.put(banknote, actuallyAdded);
 
             } catch (CassetteException e) {
-                // CassetteException уже наше кастомное исключение
                 System.err.println("Ошибка при внесении " + banknote.getValue() + " руб.: " + e.getMessage());
             }
         }
@@ -105,7 +102,6 @@ public class ATM {
     public WithdrawalResult withdraw(int amount) {
         // Валидация суммы
         if (amount <= 0) {
-            // Вместо return new WithdrawalResult(amount, "...")
             throw new InvalidAmountException("Сумма должна быть положительной");
         }
 

@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Результат операции выдачи наличных
+ *
  * @author vladimir_shi
  * @since 29.12.2025
- *
- * Результат операции выдачи наличных
  */
 public class WithdrawalResult {
     private final boolean success;

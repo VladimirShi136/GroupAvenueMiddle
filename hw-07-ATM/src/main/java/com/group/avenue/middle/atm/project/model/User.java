@@ -4,14 +4,14 @@ import com.group.avenue.middle.atm.project.exception.InsufficientFundsException;
 import com.group.avenue.middle.atm.project.exception.InvalidAmountException;
 
 /**
+ * Пользователь банкомата с лимитом средств
+ *
  * @author vladimir_shi
  * @since 29.12.2025
- *
- * Пользователь банкомата с лимитом средств
  */
 public class User {
-    private final String name;
-    private final String cardNumber;
+    private final String name; // имя пользователя карты
+    private final String cardNumber; // номер карты
     private int balance; // баланс в рублях
     private final int dailyLimit; // дневной лимит снятия
     private int withdrawnToday; // уже снято сегодня
@@ -47,7 +47,6 @@ public class User {
         }
 
         if ((withdrawnToday + amount) > dailyLimit) {
-            // Можно создать новое исключение или использовать существующее
             throw new InvalidAmountException("Превышен дневной лимит снятия");
         }
         balance -= amount;
